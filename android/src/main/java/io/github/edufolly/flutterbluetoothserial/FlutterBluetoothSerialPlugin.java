@@ -525,8 +525,12 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
         @Override
         protected void onRead(byte[] buffer) {
             activity.runOnUiThread(() -> {
+                Log.d(TAG, "onRead: send");
                 if (readSink != null) {
+                    Log.d(TAG, "onRead: send");
                     readSink.success(buffer);
+                } else {
+                    Log.d(TAG, "onRead: readSink null");
                 }
             });
         }

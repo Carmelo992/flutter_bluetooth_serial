@@ -125,6 +125,7 @@ public abstract class BluetoothConnection
                     bytes = input.read(buffer);
                     Log.d("CUSTOM_LOG", bytes+"");
                     onRead(Arrays.copyOf(buffer, bytes));
+                    Log.d("CUSTOM_LOG", "data sent");
 
                 } catch (IOException e) {
                     Log.d("CUSTOM_LOG", e.getMessage());

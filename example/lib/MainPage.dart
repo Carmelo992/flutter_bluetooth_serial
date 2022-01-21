@@ -64,9 +64,7 @@ class _MainPage extends State<MainPage> {
     });
 
     // Listen for futher state changes
-    FlutterBluetoothSerial.instance
-        .onStateChanged()
-        .listen((BluetoothState state) {
+    FlutterBluetoothSerial.instance.onStateChanged().listen((BluetoothState state) {
       setState(() {
         _bluetoothState = state;
 
@@ -136,8 +134,7 @@ class _MainPage extends State<MainPage> {
             ListTile(
               title: _discoverableTimeoutSecondsLeft == 0
                   ? const Text("Discoverable")
-                  : Text(
-                      "Discoverable for ${_discoverableTimeoutSecondsLeft}s"),
+                  : Text("Discoverable for ${_discoverableTimeoutSecondsLeft}s"),
               subtitle: const Text("PsychoX-Luna"),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -154,26 +151,21 @@ class _MainPage extends State<MainPage> {
                     icon: const Icon(Icons.refresh),
                     onPressed: () async {
                       print('Discoverable requested');
-                      final int timeout = (await FlutterBluetoothSerial.instance
-                          .requestDiscoverable(60))!;
+                      final int timeout = (await FlutterBluetoothSerial.instance.requestDiscoverable(60))!;
                       if (timeout < 0) {
                         print('Discoverable mode denied');
                       } else {
-                        print(
-                            'Discoverable mode acquired for $timeout seconds');
+                        print('Discoverable mode acquired for $timeout seconds');
                       }
                       setState(() {
                         _discoverableTimeoutTimer?.cancel();
                         _discoverableTimeoutSecondsLeft = timeout;
-                        _discoverableTimeoutTimer =
-                            Timer.periodic(Duration(seconds: 1), (Timer timer) {
+                        _discoverableTimeoutTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
                           setState(() {
                             if (_discoverableTimeoutSecondsLeft < 0) {
-                              FlutterBluetoothSerial.instance.isDiscoverable
-                                  .then((isDiscoverable) {
+                              FlutterBluetoothSerial.instance.isDiscoverable.then((isDiscoverable) {
                                 if (isDiscoverable ?? false) {
-                                  print(
-                                      "Discoverable after timeout... might be infinity timeout :F");
+                                  print("Discoverable after timeout... might be infinity timeout :F");
                                   _discoverableTimeoutSecondsLeft += 1;
                                 }
                               });
@@ -201,17 +193,15 @@ class _MainPage extends State<MainPage> {
                   _autoAcceptPairingRequests = value;
                 });
                 if (value) {
-                  FlutterBluetoothSerial.instance.setPairingRequestHandler(
-                      (BluetoothPairingRequest request) {
-                    print("Trying to auto-pair with Pin 1234");
+                  FlutterBluetoothSerial.instance.setPairingRequestHandler((BluetoothPairingRequest request) {
+                    print("Trying to auto-pair with Pin b8ff3bd31a82ce2f");
                     if (request.pairingVariant == PairingVariant.Pin) {
-                      return Future.value("1234");
+                      return Future.value("b8ff3bd31a82ce2f");
                     }
                     return Future.value(null);
                   });
                 } else {
-                  FlutterBluetoothSerial.instance
-                      .setPairingRequestHandler(null);
+                  FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
                 }
               },
             ),
@@ -219,8 +209,7 @@ class _MainPage extends State<MainPage> {
               title: ElevatedButton(
                   child: const Text('Explore discovered devices'),
                   onPressed: () async {
-                    final BluetoothDevice? selectedDevice =
-                        await Navigator.of(context).push(
+                    final BluetoothDevice? selectedDevice = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return DiscoveryPage();
@@ -239,8 +228,7 @@ class _MainPage extends State<MainPage> {
               title: ElevatedButton(
                 child: const Text('Connect to paired device to chat'),
                 onPressed: () async {
-                  final BluetoothDevice? selectedDevice =
-                      await Navigator.of(context).push(
+                  final BluetoothDevice? selectedDevice = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
                         return SelectBondedDevicePage(checkAvailability: false);
@@ -271,12 +259,10 @@ class _MainPage extends State<MainPage> {
                       /* Update for `_collectingTask.inProgress` */
                     });
                   } else {
-                    final BluetoothDevice? selectedDevice =
-                        await Navigator.of(context).push(
+                    final BluetoothDevice? selectedDevice = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return SelectBondedDevicePage(
-                              checkAvailability: false);
+                          return SelectBondedDevicePage(checkAvailability: false);
                         },
                       ),
                     );
