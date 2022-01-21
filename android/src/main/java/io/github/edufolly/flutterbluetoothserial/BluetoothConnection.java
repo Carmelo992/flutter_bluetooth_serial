@@ -1,14 +1,19 @@
 package io.github.edufolly.flutterbluetoothserial;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
 import java.util.UUID;
 import java.util.Arrays;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 
 /// Universal Bluetooth serial connection class (for Java)
 public abstract class BluetoothConnection
@@ -118,13 +123,9 @@ public abstract class BluetoothConnection
             while (!requestedClosing) {
                 try {
                     bytes = input.read(buffer);
-
+                    Log.d("CUSTOM_LOG", bytes+"");
                     onRead(Arrays.copyOf(buffer, bytes));
-                    
-                    //temp
-                    int len = (short)buffer.limit();
-                    buffer.position((int)len);
-                    buffer.compact();
+
                 } catch (IOException e) {
                     // `input.read` throws when closed by remote device
                     break;
