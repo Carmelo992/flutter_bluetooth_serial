@@ -120,6 +120,11 @@ public abstract class BluetoothConnection
                     bytes = input.read(buffer);
 
                     onRead(Arrays.copyOf(buffer, bytes));
+                    
+                    //temp
+                    int len = (short)buffer.limit();
+                    buffer.position((int)len);
+                    buffer.compact();
                 } catch (IOException e) {
                     // `input.read` throws when closed by remote device
                     break;
