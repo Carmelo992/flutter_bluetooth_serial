@@ -127,6 +127,7 @@ public abstract class BluetoothConnection
                     onRead(Arrays.copyOf(buffer, bytes));
 
                 } catch (IOException e) {
+                    Log.d("CUSTOM_LOG", e.getMessage());
                     // `input.read` throws when closed by remote device
                     break;
                 }
