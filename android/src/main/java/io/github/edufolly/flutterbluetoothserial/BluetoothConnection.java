@@ -134,6 +134,7 @@ public abstract class BluetoothConnection
                 }
             }
 
+            Log.d("CUSTOM_LOG", "end");
             // Make sure output stream is closed
             if (output != null) {
                 try {
@@ -173,6 +174,7 @@ public abstract class BluetoothConnection
             }
             requestedClosing = true;
 
+            Log.d("CUSTOM_LOG", "closing");
             // Flush output buffers befoce closing
             try {
                 output.flush();

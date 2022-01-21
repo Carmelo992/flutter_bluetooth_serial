@@ -92,6 +92,8 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                 final String action = intent.getAction();
                 switch (action) {
                     case BluetoothAdapter.ACTION_STATE_CHANGED:
+
+                        Log.d("CUSTOM_LOG", "state changed");
                         // Disconnect all connections
                         int size = connections.size();
                         for (int i = 0; i < size; i++) {
@@ -510,6 +512,8 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                     // If canceled by local, disconnects - in other case, by remote, does nothing
                     self.disconnect();
 
+                    Log.d("CUSTOM_LOG", "onCancel");
+
                     // True dispose
                     AsyncTask.execute(() -> {
                         readChannel.setStreamHandler(null);
@@ -525,7 +529,6 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
         @Override
         protected void onRead(byte[] buffer) {
             activity.runOnUiThread(() -> {
-                Log.d(TAG, "onRead: send");
                 if (readSink != null) {
                     Log.d(TAG, "onRead: send");
                     readSink.success(buffer);
