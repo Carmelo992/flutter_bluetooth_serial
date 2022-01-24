@@ -52,19 +52,8 @@ public abstract class BluetoothConnection
             throw new IOException("device not found");
         }
 
-        //BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
+        BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
         // @TODO . introduce ConnectionMethod
-
-        BluetoothSocket socket;
-        try {
-            socket = (BluetoothSocket) device.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(device,1);
-        } catch (Exception e) {
-            socket = device.createRfcommSocketToServiceRecord(uuid);
-            e.printStackTrace();
-        }
-        if (socket == null) {
-            throw new IOException("socket connection not established");
-        }
 
         // Cancel discovery, even though we didn't start it
         bluetoothAdapter.cancelDiscovery();
@@ -127,7 +116,7 @@ public abstract class BluetoothConnection
 
         /// Thread main code
         public void run() {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4* 1024];
             int bytes;
 
             while (!requestedClosing) {
