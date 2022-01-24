@@ -1,13 +1,8 @@
 package io.github.edufolly.flutterbluetoothserial;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
 import java.util.UUID;
 import java.util.Arrays;
 
@@ -52,8 +47,10 @@ public abstract class BluetoothConnection
             throw new IOException("device not found");
         }
 
-        BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
-        // @TODO . introduce ConnectionMethod
+        BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid); // @TODO . introduce ConnectionMethod
+        if (socket == null) {
+            throw new IOException("socket connection not established");
+        }
 
         // Cancel discovery, even though we didn't start it
         bluetoothAdapter.cancelDiscovery();
@@ -67,7 +64,7 @@ public abstract class BluetoothConnection
     public void connect(String address) throws IOException {
         connect(address, DEFAULT_UUID);
     }
-    
+
     /// Disconnects current session (ignore if not connected)
     public void disconnect() {
         if (isConnected()) {
@@ -76,7 +73,7 @@ public abstract class BluetoothConnection
         }
     }
 
-    /// Writes to connected remote device 
+    /// Writes to connected remote device
     public void write(byte[] data) throws IOException {
         if (!isConnected()) {
             throw new IOException("not connected");
@@ -97,7 +94,7 @@ public abstract class BluetoothConnection
         private final InputStream input;
         private final OutputStream output;
         private boolean requestedClosing = false;
-        
+
         ConnectionThread(BluetoothSocket socket) {
             this.socket = socket;
             InputStream tmpIn = null;
@@ -116,15 +113,16 @@ public abstract class BluetoothConnection
 
         /// Thread main code
         public void run() {
-            byte[] buffer = new byte[4* 1024];
+            byte[] buffer = new byte[1024];
             int bytes;
 
             while (!requestedClosing) {
                 try {
                     bytes = input.read(buffer);
-                    Log.d("CUSTOM_LOG", bytes+"");
+                    long diff = input.skip(bytes);
+                    Log.d("CUSTOM_LOG", "read: "+ bytes+" remaining: " +diff);
                     onRead(Arrays.copyOf(buffer, bytes));
-                    Log.d("CUSTOM_LOG", "data sent");
+                    //Log.d("CUSTOM_LOG", "data sent");
 
                 } catch (IOException e) {
                     Log.d("CUSTOM_LOG", e.getMessage());
