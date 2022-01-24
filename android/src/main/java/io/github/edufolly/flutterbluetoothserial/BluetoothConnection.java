@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
@@ -51,7 +52,16 @@ public abstract class BluetoothConnection
             throw new IOException("device not found");
         }
 
-        BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid); // @TODO . introduce ConnectionMethod
+        //BluetoothSocket socket = device.createRfcommSocketToServiceRecord(uuid);
+        // @TODO . introduce ConnectionMethod
+
+        BluetoothSocket socket;
+        try {
+            socket = (BluetoothSocket) device.getClass().getMethod("createRfcommSocket", new Class[] {int.class}).invoke(device,1);
+        } catch (Exception e) {
+            socket = device.createRfcommSocketToServiceRecord(uuid);
+            e.printStackTrace();
+        }
         if (socket == null) {
             throw new IOException("socket connection not established");
         }
